@@ -66,7 +66,13 @@ python3 scripts/init_school_portal_digest.py \
   --children 'Child A,Child B'
 ```
 
-The script creates today's starter summary using your local date.
+The script creates today's starter summary using your local date. It also supports:
+
+```bash
+python3 scripts/init_school_portal_digest.py --target school-portal --validate
+python3 scripts/init_school_portal_digest.py --target school-portal --dry-run
+python3 scripts/init_school_portal_digest.py --version
+```
 
 ## Local files
 
@@ -81,7 +87,7 @@ school-portal/
   calendar/
 ```
 
-Do not commit real `config.json`, raw portal text, screenshots, cookies, or private family data to a public repository.
+Do not commit real `config.json`, raw portal text, screenshots, cookies, or private family data to a public repository. The skill package includes JSON Schema files for `config.json`, `site-config.json`, and `action-items.json` as structure contracts for extension and validation.
 
 ## Authentication
 

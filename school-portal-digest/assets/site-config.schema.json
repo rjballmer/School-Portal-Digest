@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/school-portal-digest/site-config.schema.json",
+  "title": "School Portal Digest site config",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["portal", "baseUrl", "surfaces", "selectors"],
+  "properties": {
+    "portal": { "type": "string", "minLength": 1 },
+    "baseUrl": { "type": "string", "format": "uri" },
+    "surfaces": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "object",
+        "required": ["label", "url", "enabled", "priority"],
+        "properties": {
+          "label": { "type": "string", "minLength": 1 },
+          "url": { "type": "string", "minLength": 1 },
+          "enabled": { "type": "boolean" },
+          "priority": { "type": "integer", "minimum": 1 },
+          "notes": { "type": "string" }
+        }
+      }
+    },
+    "selectors": { "type": "object" },
+    "lastVerified": { "type": ["string", "null"] },
+    "notes": { "type": "string" }
+  }
+}

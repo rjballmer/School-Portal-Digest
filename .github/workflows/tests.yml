@@ -1,0 +1,25 @@
+name: tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Run unit tests
+        run: python -m unittest discover -s tests -p 'test_*.py'
+      - name: Validate JSON assets
+        run: |
+          python -m json.tool school-portal-digest/assets/config.example.json >/dev/null
+          python -m json.tool school-portal-digest/assets/site-config.example.json >/dev/null
+          python -m json.tool school-portal-digest/assets/action-items.example.json >/dev/null
+          python -m json.tool school-portal-digest/assets/action-items.empty.json >/dev/null
+          python -m json.tool school-portal-digest/assets/config.schema.json >/dev/null
+          python -m json.tool school-portal-digest/assets/site-config.schema.json >/dev/null
+          python -m json.tool school-portal-digest/assets/action-items.schema.json >/dev/null

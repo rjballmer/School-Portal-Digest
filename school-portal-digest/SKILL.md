@@ -34,7 +34,7 @@ This skill is designed for autonomous, read-only authenticated browsing after th
 
 When setting this up for a new family or portal, first read `references/onboarding.md` and use the setup prompt there. Discover only the minimum family-specific details needed for safe operation: portal name/URL, child labels or aliases, actionable categories, calendar preferences, suppression preferences, digest cadence, and privacy constraints.
 
-Use `scripts/init_school_portal_digest.py` to create the local setup folder when possible. It creates config, site-config, empty action state, a calendar folder, and a starter summary for today.
+Use `scripts/init_school_portal_digest.py` to create the local setup folder when possible. It creates config, site-config, empty action state, a calendar folder, and a starter summary for today. Use `--validate --target <folder>` to check an existing setup without changing files.
 
 For families using multiple portals, prefer one local config folder per portal unless the user explicitly asks for a combined setup.
 
@@ -58,7 +58,7 @@ Use project-local files outside the skill package, for example `school-portal/`:
 - `summary-YYYY-MM-DD.md` — daily digest artifact
 - `calendar/` — optional generated `.ics` fallback files
 
-Use `assets/config.example.json` and `assets/site-config.example.json` as starting templates. Use `assets/action-items.empty.json` for live state. Use `assets/action-items.example.json` only as a schema/example reference, not as a starting state file.
+Use `assets/config.example.json` and `assets/site-config.example.json` as starting templates. Use `assets/action-items.empty.json` for live state. Use `assets/action-items.example.json` only as an example reference, not as a starting state file. Use `assets/config.schema.json`, `assets/site-config.schema.json`, and `assets/action-items.schema.json` as machine-readable structure contracts when validating or extending local state.
 
 ## Browser approach
 

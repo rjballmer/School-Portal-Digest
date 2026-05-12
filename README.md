@@ -24,6 +24,9 @@ It is designed for authenticated parent portals such as ParentSquare, Schoology,
 ## Contents
 
 - `school-portal-digest/` — source skill
+- `school-portal-digest/assets/*.schema.json` — machine-readable config/state schemas
+- `school-portal-digest/scripts/init_school_portal_digest.py` — local setup and validation helper
+- `tests/` — automated tests for setup, validation, URL checks, dry-run, and idempotency
 - `dist/school-portal-digest.skill` — packaged skill artifact
 
 ## Local setup
@@ -41,3 +44,29 @@ python3 school-portal-digest/scripts/init_school_portal_digest.py \
 ```
 
 This creates local private state files and a starter summary for today's local date. The default cadence is a post-school-day update before dinner, so same-day school signals can shape evening check-ins. Do not commit real `school-portal/` runtime folders.
+
+Validate an existing local setup without changing files:
+
+```bash
+python3 school-portal-digest/scripts/init_school_portal_digest.py \
+  --target school-portal \
+  --validate
+```
+
+Preview setup without writing files:
+
+```bash
+python3 school-portal-digest/scripts/init_school_portal_digest.py \
+  --target school-portal \
+  --dry-run
+```
+
+Run the automated tests:
+
+```bash
+python3 -m unittest discover -s tests -p 'test_*.py'
+```
+
+## License
+
+MIT License. See `LICENSE`.
