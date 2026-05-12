@@ -1,0 +1,51 @@
+{
+  "portal": "Example School Portal",
+  "baseUrl": "https://example.edu",
+  "surfaces": {
+    "forms": {
+      "label": "Forms / Permissions",
+      "url": "/parent/forms",
+      "enabled": true,
+      "priority": 1,
+      "notes": "Highest-value action surface. Expand cards/details when available."
+    },
+    "feed": {
+      "label": "Posts / Announcements",
+      "url": "/parent/feed",
+      "enabled": true,
+      "priority": 2,
+      "notes": "Best source for classroom updates, dates, and worth-knowing context."
+    },
+    "messages": {
+      "label": "Messages / Inbox",
+      "url": "/parent/messages",
+      "enabled": true,
+      "priority": 3,
+      "notes": "Direct asks, exceptions, and teacher-specific follow-up."
+    },
+    "calendar": {
+      "label": "Calendar / Events",
+      "url": "/parent/calendar",
+      "enabled": true,
+      "priority": 4,
+      "notes": "Event/date source; dedupe before calendar recommendations or writes."
+    },
+    "alerts": {
+      "label": "Alerts / Notices",
+      "url": "/parent/alerts",
+      "enabled": true,
+      "priority": 5,
+      "notes": "Include only if materially important."
+    },
+    "dashboard": {
+      "label": "Student Dashboard",
+      "url": "/parent/student",
+      "enabled": false,
+      "priority": 6,
+      "notes": "Optional. Enable only if needed for child-specific context."
+    }
+  },
+  "selectors": {},
+  "lastVerified": null,
+  "notes": "Example only. Routes, labels, and selectors are discovered during onboarding walkthrough. Do not commit real portal IDs, student IDs, URLs, screenshots, or private school details to public repos."
+}

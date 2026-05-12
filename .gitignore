@@ -1,0 +1,23 @@
+.DS_Store
+*.swp
+*.tmp
+*.log
+
+# Local/private runtime state created by the skill
+school-portal/
+**/config.json
+**/*credentials*
+**/*secret*
+**/*token*
+.env
+.env.*
+!.env.example
+!*.env.example
+
+# Generated/scratch data
+screenshots/
+tmp/
+downloads/
+raw/
+__pycache__/
+*.pyc

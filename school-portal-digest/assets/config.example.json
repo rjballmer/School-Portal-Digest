@@ -1,0 +1,31 @@
+{
+  "portal": {
+    "name": "Example School Portal",
+    "loginUrl": "https://example.edu/login",
+    "homeUrl": "https://example.edu/parent/home",
+    "browserProfile": "openclaw",
+    "multiPortalNote": "For multiple portals, create separate local config folders unless you intentionally build a combined setup."
+  },
+  "family": {
+    "children": [
+      { "label": "Child A", "portalAliases": ["Student One"], "calendarName": "Family" },
+      { "label": "Child B", "portalAliases": ["Student Two"], "calendarName": "Family" }
+    ],
+    "calendarWriteMode": "recommend-only",
+    "calendarWriteModeOptions": ["recommend-only", "write-with-confirmation", "write-auto"]
+  },
+  "digest": {
+    "cadence": "on-demand",
+    "deliveryMode": "announce",
+    "deliveryModeOptions": ["announce", "file-only", "none"],
+    "maxRetentionDays": 30,
+    "suppressCategories": ["generic district notices", "lunch menus"],
+    "actionableCategories": ["forms", "permissions", "payments", "teacher replies", "supplies", "registration"],
+    "calendarCategories": ["child-specific events", "field trips", "performances", "conferences"]
+  },
+  "privacy": {
+    "redactNamesInSharedOutputs": true,
+    "storeRawPortalText": false,
+    "avoidScreenshots": true
+  }
+}

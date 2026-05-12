@@ -1,0 +1,30 @@
+{
+  "items": [
+    {
+      "id": "example-field-trip-permission",
+      "title": "Field trip permission form",
+      "child": "Child A",
+      "source": "Forms",
+      "status": "open",
+      "firstSeen": "2026-01-15",
+      "lastSeen": "2026-01-15",
+      "dueDate": "2026-01-22",
+      "eventDate": "2026-01-29",
+      "confidence": "high",
+      "notes": "Example only. Replace with local state. Do not commit real child/school details to public repos."
+    },
+    {
+      "id": "example-museum-trip-signed",
+      "title": "Museum trip permission form",
+      "child": "Child B",
+      "source": "Forms",
+      "status": "completed",
+      "firstSeen": "2026-01-10",
+      "lastSeen": "2026-01-16",
+      "completedDate": "2026-01-16",
+      "eventDate": "2026-01-24",
+      "confidence": "high",
+      "notes": "Example completed item. Keep visible only until the related event passes if useful for reassurance."
+    }
+  ]
+}
