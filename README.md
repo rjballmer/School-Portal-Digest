@@ -1,8 +1,8 @@
 # School Portal Digest
 
-An OpenClaw skill for turning noisy school-portal updates into a short parent-facing digest.
+Read-only OpenClaw skill that does a daily check of school portals, providing high-signal parent action items, family calendar management, and check-in guidance at dinner with topics from the day to chat about.
 
-It is designed for read-only use with authenticated school portals such as ParentSquare, Schoology, Seesaw, ClassDojo, Canvas, Google Classroom, and similar parent sites.
+It is designed for authenticated parent portals such as ParentSquare, Schoology, Seesaw, ClassDojo, Canvas, Google Classroom, and similar school sites.
 
 ## What it does
 
