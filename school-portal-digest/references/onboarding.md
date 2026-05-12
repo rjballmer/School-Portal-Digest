@@ -9,18 +9,23 @@ Use this shorter first prompt. Do not lead with a 13-question form unless the us
 ```markdown
 I can set this up in read-only mode. I won’t submit forms, RSVP, pay fees, message teachers, volunteer, or change school data.
 
-To start, I only need five things:
+To start, I need six things:
 
 1. Which portal do you use? ParentSquare, Schoology, Seesaw, ClassDojo, Canvas, Google Classroom, other?
 2. What is the portal login URL or homepage?
 3. What child labels should I use? First names, initials, or Child A / Child B are all fine.
-4. Should calendar items be recommendation-only for now? Default: yes.
-5. Do you want daily, weekly, or on-demand digests? Default: on-demand until the first review.
+4. How should scheduled runs authenticate?
+   - reuse a dedicated browser profile/session
+   - use a local OS keychain or secret manager entry
+   - use an official OAuth/API token if the portal supports it
+   - stop and ask when login expires
+5. Should calendar items be recommendation-only for now? Default: yes.
+6. When should this run? Recommended default: after the school day, before dinner, so same-day signals can shape evening check-ins.
 
-I’ll use privacy-safe defaults: no passwords in chat, browser login only, no raw portal text stored, avoid screenshots, no calendar writes yet.
+I’ll use privacy-safe defaults: no credentials in chat, no raw portal text stored, avoid screenshots, no calendar writes yet. The goal is autonomous scheduled operation, not making you log in every night.
 ```
 
-After the user answers, create local files, do the read-only walkthrough, produce a first digest, and then ask optional tuning questions about aliases, suppression categories, calendar policy, delivery mode, and privacy.
+After the user answers, create local files, do the read-only walkthrough, produce a first digest, and then ask optional tuning questions about aliases, suppression categories, calendar policy, delivery mode, schedule timing, authentication fallback, and privacy.
 
 Prefer using `scripts/init_school_portal_digest.py` to create local files. It stamps the setup with today's local date and creates a starter `summary-YYYY-MM-DD.md` so the first-run date is unambiguous.
 
@@ -35,8 +40,9 @@ Ask these after the first digest or if the user wants detailed setup:
 5. Should calendar entries stay recommendation-only, require confirmation, or eventually auto-add trusted event types?
 6. Which calendar should be used for child-specific events, if any?
 7. Are there categories you want suppressed? Examples: fundraisers, school-wide newsletters, lunch menus, generic district notices.
-8. Where should local state live? Default: `school-portal/` in the current workspace.
-9. Any privacy constraints? Examples: redact names in summaries, never store raw portal text, avoid screenshots, do not retain attachments.
+8. What should happen if login expires during a scheduled run: fail closed with a login-needed note, or use an approved local keychain/secret-manager credential flow if configured?
+9. Where should local state live? Default: `school-portal/` in the current workspace.
+10. Any privacy constraints? Examples: redact names in summaries, never store raw portal text, avoid screenshots, do not retain attachments.
 
 ## Minimal local config fields
 
@@ -82,7 +88,7 @@ Create or update `school-portal/config.json` from `assets/config.example.json`. 
 1. Start managed browser profile.
 2. Open portal homepage.
 3. Confirm whether user is logged in.
-4. If login/MFA is needed, stop and ask the user to complete it.
+4. If login/MFA is needed, follow the configured auth mode. For browser-session auth, ask the user to complete the first login once in the managed browser. For approved keychain/API modes, use the local secret mechanism without printing secrets. If MFA/CAPTCHA appears, stop and ask the user to complete that step.
 5. Identify main navigation labels for:
    - forms / permissions / action center
    - posts / announcements / classroom feed
@@ -103,10 +109,12 @@ Good onboarding:
 - asks for labels, not unnecessary full identity
 - lets the parent choose privacy level
 - separates calendar recommendations from calendar writes
-- treats portal login/MFA as user-owned
+- supports autonomous scheduled runs after an approved auth mode is configured
+- treats portal login/MFA as user-owned, while allowing safe local credential/session options
 - creates config that can be edited later
 
 Bad onboarding:
+- implies the parent must manually log in before every scheduled run
 - asks for passwords in chat
 - stores raw portal data by default
 - assumes all school announcements matter

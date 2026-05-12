@@ -24,13 +24,14 @@ A scheduled run should never need to rediscover everything. It should load local
    - `school-portal/config.json` from `assets/config.example.json`
    - `school-portal/site-config.json` from `assets/site-config.example.json`
    - `school-portal/action-items.json` from `assets/action-items.empty.json`
-6. User logs into the portal locally in the managed browser when needed.
-7. Agent performs a read-only walkthrough.
-8. Agent records navigation labels/routes in `site-config.json`.
-9. Agent produces the first digest.
-10. User reviews what was useful, noisy, missing, or too sensitive.
-11. Agent updates config/suppression rules.
-12. Only after review should the user schedule recurring runs.
+6. User chooses an authentication mode: dedicated browser session, official OAuth/API token, local OS keychain/secret manager, or fail-closed manual refresh when login expires.
+7. User completes first login or local secret setup as appropriate. Do not collect credentials in chat.
+8. Agent performs a read-only walkthrough.
+9. Agent records navigation labels/routes in `site-config.json`.
+10. Agent produces the first digest.
+11. User reviews what was useful, noisy, missing, or too sensitive.
+12. Agent updates config/suppression rules.
+13. Only after review should the user schedule recurring runs.
 
 ## Local config acquisition
 
@@ -41,7 +42,8 @@ Used for preferences and private family context:
 - child labels / aliases
 - actionable categories
 - calendar policy
-- digest cadence
+- digest cadence and schedule timing
+- authentication mode and fallback preference
 - privacy constraints
 - categories to suppress
 
@@ -77,7 +79,8 @@ Run the School Portal Digest using the existing local config/state.
 Rules:
 - Determine today's local date first and use it for the summary filename and heading.
 - Read `school-portal/config.json`, `school-portal/site-config.json`, and `school-portal/action-items.json`.
-- Use the configured managed browser profile.
+- Use the configured authentication mode and managed browser profile.
+- Scheduled operation should be autonomous when the configured auth mode is valid; do not require manual login every run.
 - Stay read-only in the school portal.
 - Do not submit, sign, RSVP, pay, post, message, volunteer, or acknowledge anything.
 - If login, MFA, CAPTCHA, payment, signature, consent, or irreversible action appears, stop and report the blocker.
@@ -94,15 +97,20 @@ Rules:
 
 Use OpenClaw cron for scheduled runs rather than shell sleep loops.
 
-Recommended default:
-- weekday mornings before school, or
-- Sunday evening weekly digest, or
+Recommended default for parent dinner/check-in use:
+- **post-school-day update before dinner** so same-day signals can shape that evening's parent/child conversation
+
+Other valid patterns:
+- weekday mornings before school for logistics-first families
+- Sunday evening weekly digest
 - school-night evening digest
 
 Use an isolated `agentTurn` job unless the user specifically wants the main session updated.
 
-Example schedule concept:
-- `0 7 * * 1-5` for weekday 7:00 AM local time
+Example schedule concepts:
+- `0 17 * * 1-5` for weekday 5:00 PM local post-school update
+- `0 17 * * 0-5` for Sunday-through-Friday 5:00 PM local school-night/dinner rhythm
+- `0 7 * * 1-5` for weekday 7:00 AM logistics review
 - `0 18 * * 0` for Sunday 6:00 PM weekly review
 
 Delivery mode should live in `config.json`:
@@ -144,6 +152,7 @@ Prefer:
 ## Failure modes
 
 Stop and report:
+- configured auth mode failed
 - login expired
 - MFA required
 - CAPTCHA

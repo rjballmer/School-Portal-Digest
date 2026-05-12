@@ -15,8 +15,9 @@ It is designed for authenticated parent portals such as ParentSquare, Schoology,
 ## Safety posture
 
 - read-only by default
+- autonomous scheduled operation after the parent chooses an auth mode
 - no passwords, MFA codes, cookies, or tokens in chat
-- user logs into the portal locally in a browser
+- supports dedicated browser-session auth, official OAuth/API tokens, or local keychain/secret-manager references
 - no submit/sign/pay/RSVP/message/volunteer actions without explicit confirmation
 - local config and state stay outside the skill package
 
@@ -39,4 +40,4 @@ python3 school-portal-digest/scripts/init_school_portal_digest.py \
   --children 'Child A,Child B'
 ```
 
-This creates local private state files and a starter summary for today's local date. Do not commit real `school-portal/` runtime folders.
+This creates local private state files and a starter summary for today's local date. The default cadence is a post-school-day update before dinner, so same-day school signals can shape evening check-ins. Do not commit real `school-portal/` runtime folders.

@@ -48,8 +48,19 @@ def main() -> int:
     )
     parser.add_argument(
         "--cadence",
-        choices=["on-demand", "daily", "weekday-morning", "weekly"],
-        default="on-demand",
+        choices=["on-demand", "post-school-day", "daily", "weekday-morning", "weekly"],
+        default="post-school-day",
+    )
+    parser.add_argument(
+        "--auth-mode",
+        choices=["browser-session", "official-oauth", "keychain", "env-token", "manual-refresh"],
+        default="browser-session",
+        help="How scheduled runs should authenticate. No secret values are stored by this script.",
+    )
+    parser.add_argument(
+        "--secret-ref",
+        default=None,
+        help="Optional local keychain/secret-manager reference name. Do not pass a secret value.",
     )
     parser.add_argument(
         "--delivery-mode",
@@ -86,6 +97,8 @@ def main() -> int:
             for c in children
         ]
     config["family"]["calendarWriteMode"] = args.calendar_write_mode
+    config["portal"].setdefault("auth", {})["mode"] = args.auth_mode
+    config["portal"]["auth"]["secretRef"] = args.secret_ref
     config["digest"]["cadence"] = args.cadence
     config["digest"]["deliveryMode"] = args.delivery_mode
     config["initializedDate"] = today
@@ -141,11 +154,12 @@ def main() -> int:
     for line in outputs:
         print(f"- {line}")
     print("\nNext steps:")
-    print("1. Review/edit config.json for family labels and preferences.")
-    print("2. Open the portal in the managed browser and complete login yourself.")
+    print("1. Review/edit config.json for family labels, auth mode, schedule, and preferences.")
+    print("2. Complete first login or local secret setup for the selected auth mode.")
     print("3. Run a read-only walkthrough to update site-config.json.")
     print(f"4. First real digest should write summary-{today}.md using today's date.")
-    print("\nDo not put passwords, cookies, MFA codes, or raw portal dumps in these files.")
+    print("5. Schedule the recurring run after the school day if dinner/check-in signals matter.")
+    print("\nDo not put passwords, cookies, MFA codes, or raw portal dumps in these files or chat.")
     return 0
 
 

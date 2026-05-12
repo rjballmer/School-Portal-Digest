@@ -12,7 +12,7 @@ Turn noisy school-portal updates into a calm parent digest:
 3. what is worth knowing about the child’s day or development
 4. what to ask about at dinner or bedtime
 
-This skill is designed for read-only authenticated browsing. It should reduce parent cognitive load without submitting forms, sending messages, RSVP-ing, volunteering, or changing school data.
+This skill is designed for autonomous, read-only authenticated browsing after the parent chooses an approved local authentication model. It should reduce parent cognitive load without submitting forms, sending messages, RSVP-ing, volunteering, or changing school data.
 
 ## Requirements
 
@@ -38,11 +38,13 @@ Use `scripts/init_school_portal_digest.py` to create the local setup folder when
 
 For families using multiple portals, prefer one local config folder per portal unless the user explicitly asks for a combined setup.
 
-Do not ask for passwords in chat. The user should log in locally through the managed browser when needed. Read `references/credential-model.md` when deciding how authentication should work.
+Do not ask for passwords in chat. During onboarding, ask how the parent wants authentication managed for scheduled runs: dedicated browser session, official OAuth/API token, OS keychain/secret manager, environment token, or fail-closed manual refresh when login expires. Read `references/credential-model.md` when deciding how authentication should work.
 
 ## Scheduled operation
 
-For recurring checks, keep all family-specific state outside the skill package. A scheduled run should load local config/state, perform a read-only scan, update `action-items.json`, write the daily summary, and deliver the digest if configured.
+For recurring checks, keep all family-specific state outside the skill package. A scheduled run should load local config/state, use the configured auth mode, perform a read-only scan, update `action-items.json`, write the daily summary, and deliver the digest if configured.
+
+For parent evening check-ins, prefer a post-school-day run before dinner so same-day signals are captured while they are still useful.
 
 Read `references/scheduled-runs.md` before creating or modifying a recurring job.
 

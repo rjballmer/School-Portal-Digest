@@ -4,6 +4,12 @@
     "loginUrl": "https://example.edu/login",
     "homeUrl": "https://example.edu/parent/home",
     "browserProfile": "openclaw",
+    "auth": {
+      "mode": "browser-session",
+      "modeOptions": ["browser-session", "official-oauth", "keychain", "env-token", "manual-refresh"],
+      "secretRef": null,
+      "onAuthExpired": "stop-and-report"
+    },
     "multiPortalNote": "For multiple portals, create separate local config folders unless you intentionally build a combined setup."
   },
   "family": {
@@ -15,7 +21,8 @@
     "calendarWriteModeOptions": ["recommend-only", "write-with-confirmation", "write-auto"]
   },
   "digest": {
-    "cadence": "on-demand",
+    "cadence": "post-school-day",
+    "scheduleHint": "Run after the school day and before dinner so same-day signals can shape evening check-ins.",
     "deliveryMode": "announce",
     "deliveryModeOptions": ["announce", "file-only", "none"],
     "maxRetentionDays": 30,

@@ -1,10 +1,12 @@
 # Credential Model
 
-## Best-practice default: local browser-session authentication
+## Goal: autonomous runs with explicit auth choice
 
-The recommended credential model is: **the user logs into the school portal locally in a managed browser profile; the skill reuses that authenticated browser session for read-only navigation.**
+The skill is meant to run autonomously on a schedule once the parent has chosen and approved an authentication model. It should not imply that the parent must manually log in every night.
 
-The skill must not ask the user to paste passwords, MFA codes, cookies, session tokens, or recovery codes into chat.
+Best-practice default: **the user completes first login locally in a dedicated managed browser profile; scheduled runs reuse that authenticated browser session for read-only navigation.**
+
+During onboarding, ask the parent how they want authentication managed. The skill must not ask the user to paste passwords, MFA codes, cookies, session tokens, or recovery codes into chat.
 
 This skill is intended for personal parent/guardian use against portals the user is already authorized to access. The user should review their portal’s terms of service before enabling recurring scans. Do not use this skill for bulk access, commercial monitoring, credential sharing, or unauthorized accounts.
 
@@ -23,22 +25,23 @@ Direct credential storage is fragile and risky. Browser-session auth is safer, m
 
 ## Authentication hierarchy
 
-Use the safest available option:
+Ask the user which model they want, then use the safest available option that still supports the desired automation:
 
-1. **Managed browser session** — default for most portals.
-2. **Official API OAuth / scoped token** — only when the portal documents and supports it.
-3. **OS keychain / secret manager** — advanced local setup, only when unavoidable.
-4. **Environment variables** — acceptable for non-public local API tokens, not preferred for passwords.
+1. **Managed browser session** — default for most portals. Parent logs in once; scheduled runs reuse the dedicated profile until the session expires.
+2. **Official API OAuth / scoped token** — best when the portal documents and supports it.
+3. **OS keychain / secret manager** — acceptable for local autonomous operation when browser sessions are unreliable and the parent explicitly approves storing credentials locally.
+4. **Environment variables** — acceptable for non-public local API tokens; weaker for raw passwords but possible if the user knowingly accepts that tradeoff.
 5. **Plaintext credentials in config or chat** — do not use.
 
 ## First login flow
 
 1. Start or open the configured managed browser profile.
 2. Navigate to the portal login URL.
-3. If login is required, ask the user to complete login in the browser.
-4. If MFA/CAPTCHA/SSO appears, wait for the user to complete it.
-5. After login succeeds, continue the read-only onboarding walkthrough.
-6. Do not read, export, print, screenshot, or store cookies/tokens.
+3. If login is required and auth mode is `browser-session`, ask the user to complete login in the browser once.
+4. If auth mode is `keychain` or `api-token`, configure the local secret reference without printing the secret value.
+5. If MFA/CAPTCHA/SSO appears, wait for the user to complete it; do not bypass it.
+6. After login succeeds, continue the read-only onboarding walkthrough.
+7. Do not read, export, print, screenshot, or store cookies/tokens.
 
 ## Profile isolation
 
@@ -58,8 +61,10 @@ Allowed in `school-portal/config.json`:
 - portal name
 - login URL / home URL
 - browser profile name
+- selected auth mode
+- local keychain item name or secret reference, not the secret value
 - child labels or aliases
-- digest cadence
+- digest cadence and schedule rationale
 - calendar policy
 - privacy preferences
 - suppression categories
@@ -103,19 +108,25 @@ SCHOOL_PORTAL_CLIENT_ID=
 Do not include real values in docs, examples, logs, or committed files.
 
 ### OS keychain / secret store
-For advanced local setups, credentials may live in an OS keychain or secret manager. The skill should still avoid printing secrets and should prefer read-only access.
+For autonomous local setups, credentials may live in an OS keychain or secret manager if the parent explicitly chooses that mode. Store only a reference in config, such as `keychainItem: school-portal-example`, never the password itself. The skill should avoid printing secrets, redact command output, and prefer read-only access.
 
 ## Scheduled-run auth behavior
 
-A scheduled run should first test whether the browser session is authenticated.
+A scheduled run should first test whether the configured auth mode works.
 
-If authenticated:
+If the browser session is authenticated:
 - proceed with read-only scan
 
-If not authenticated:
-- stop and report: `Login required`
+If browser-session auth has expired:
+- stop and report: `Login required`, unless the user configured an approved keychain/API fallback
 - do not ask for password in chat
-- ask the user to log in through the browser
+- ask the user to refresh login through the browser
+
+If keychain/API auth is configured:
+- read only the local secret reference from config
+- retrieve the secret through the local mechanism
+- redact secret values from logs and errors
+- stop if MFA/CAPTCHA/SSO requires human confirmation
 
 If MFA/CAPTCHA appears:
 - stop and report the blocker
